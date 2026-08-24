@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>RACER 46 — Race Beyond Limits</title>
+    <meta charset="utf-8">
+    <meta name="description" content="RACER 46 is a high-speed futuristic 1v1 racing game. Race beyond limits on futuristic cyber tracks!">
+    <meta property="og:title" content="RACER 46 — Race Beyond Limits" />
+    <meta property="og:type" content="game" />
+    <meta property="og:site_name" content="RACER 46" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="css/multi.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="css/fonts.css" type="text/css" charset="utf-8">
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        background-color: #060913;
+        color: #FFFFFF;
+        font-family: 'BebasNeueRegular', 'Arial Narrow', sans-serif;
+        overflow: hidden;
+      }
+      canvas { pointer-events: none; width: 100%; height: 100%; display: block; }
+      #overlay {
+        position: absolute;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- STEP 1: MAIN MENU -->
+    <div id="step-1">
+      <div id="global"></div>
+      <div id="title-container">
+        <h1 class="game-logo">RACER 46</h1>
+        <p class="game-tagline">RACE BEYOND LIMITS</p>
+      </div>
+      <div id="menucontainer">
+        <div id="menu">
+          <div id="start" class="btn-primary">START RACE</div>
+          <div id="s-controlType" class="btn-secondary">Controls: Keyboard</div>
+          <div id="s-quality" class="btn-secondary">Quality: High</div>
+          <div id="s-hud" class="btn-secondary">HUD: On</div>
+          <div id="s-godmode" style="display: none">Godmode: Off</div>
+          <div id="s-credits" class="btn-secondary">ABOUT / CREDITS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: CONTROLS HELP SCREEN -->
+    <div id="step-2" style="display: none">
+      <div class="glass-panel help-card">
+        <h2>FLIGHT CONTROLS</h2>
+        <div class="controls-grid">
+          <div><span class="key-cap">UP ARROW</span> Accelerate</div>
+          <div><span class="key-cap">LEFT / RIGHT</span> Steer Left / Right</div>
+          <div><span class="key-cap">A / D</span> Left / Right Airbrakes</div>
+          <div><span class="key-cap">ESC</span> Reset Position</div>
+        </div>
+        <div id="ctrl-help" class="btn-primary" style="margin-top: 25px;">CLICK / TOUCH TO START RACE</div>
+      </div>
+    </div>
+
+    <!-- STEP 3: LOADING SCREEN -->
+    <div id="step-3" style="display: none">
+      <div class="loading-container">
+        <h2>INITIALIZING RACER 46 SYSTEMS</h2>
+        <div class="progress-box">
+          <div id="progressbar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: GAMEPLAY CANVAS -->
+    <div id="step-4" style="display: none">
+      <div id="overlay"></div>
+      <div id="main"></div>
+    </div>
+
+    <!-- STEP 5: WIN / LOSE RACE OVER SCREEN -->
+    <div id="step-5" style="display: none">
+      <div class="glass-panel finish-card">
+        <h1 id="game-result-title">RACE COMPLETE</h1>
+        <div id="game-result-subtitle" class="result-sub">POSITION 1/2</div>
+        <div id="time" class="final-time">0'00''00</div>
+        <div class="finish-buttons">
+          <div id="btn-restart" class="btn-primary">RESTART RACE</div>
+          <div id="btn-menu" class="btn-secondary" onclick="window.location.reload();">MAIN MENU</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREDITS MODAL -->
+    <div id="credits" style="display: none">
+      <div class="glass-panel credits-card">
+        <h2>RACER 46</h2>
+        <p class="tag">RACE BEYOND LIMITS</p>
+        <hr class="neon-hr">
+        <h3>ENGINE &amp; PHYSICS FOUNDATION</h3>
+        <p>Built on HexGL 3D HTML5 Architecture by <b>Thibaut Despoulain (BKcore)</b></p>
+        <p><b>Technologies</b>: WebGL, Three.js, HTML5, JavaScript</p>
+        <h3>ENHANCEMENTS &amp; REBRANDING</h3>
+        <p>AI Racing Opponent System, Waypoint Navigation, Glassmorphism UI, Dynamic Positioning &amp; 3-Lap Engine</p>
+        <h4 style="margin-top: 20px; cursor: pointer; color: #00E5FF;">CLICK ANYWHERE TO RETURN</h4>
+      </div>
+    </div>
+
+    <div id="leapinfo" style="display: none"></div>
+
+    <script src="libs/leap-0.4.1.min.js"></script>
+    <script src="libs/Three.dev.js"></script>
+    <script src="libs/ShaderExtras.js"></script>
+    <script src="libs/postprocessing/EffectComposer.js"></script>
+    <script src="libs/postprocessing/RenderPass.js"></script>
+    <script src="libs/postprocessing/BloomPass.js"></script>
+    <script src="libs/postprocessing/ShaderPass.js"></script>
+    <script src="libs/postprocessing/MaskPass.js"></script>
+    <script src="libs/Detector.js"></script>
+    <script src="libs/Stats.js"></script>
+    <script src="libs/DAT.GUI.min.js"></script>
+
+    <script src="bkcore.coffee/controllers/TouchController.js"></script>
+    <script src="bkcore.coffee/controllers/OrientationController.js"></script>
+    <script src="bkcore.coffee/controllers/GamepadController.js"></script>
+
+    <script src="bkcore.coffee/Timer.js"></script>
+    <script src="bkcore.coffee/ImageData.js"></script>
+    <script src="bkcore.coffee/Utils.js"></script>
+
+    <script src="bkcore/threejs/RenderManager.js"></script>
+    <script src="bkcore/threejs/Shaders.js"></script>
+    <script src="bkcore/threejs/Particles.js"></script>
+    <script src="bkcore/threejs/Loader.js"></script>
+
+    <script src="bkcore/Audio.js"></script>
+
+    <script src="bkcore/hexgl/HUD.js"></script>
+    <script src="bkcore/hexgl/RaceData.js"></script>
+    <script src="bkcore/hexgl/ShipControls.js"></script>
+    <script src="bkcore/hexgl/ShipEffects.js"></script>
+    <script src="bkcore/hexgl/CameraChase.js"></script>
+    <script src="bkcore/hexgl/AIOpponent.js"></script>
+    <script src="bkcore/hexgl/Gameplay.js"></script>
+
+    <script src="bkcore/hexgl/tracks/Cityscape.js"></script>
+
+    <script src="bkcore/hexgl/HexGL.js"></script>
+
+    <script src="launch.js"></script>
+
+  </body>
+</html>
