@@ -10,3 +10,13 @@ Source code of [HexGL](http://hexgl.bkcore.com), the futuristic HTML5 racing gam
 
 Unless specified in the file, HexGL's code and resources are now licensed under the *MIT License*.
 
+## Installation
+
+	cd ~/
+	git clone git://github.com/BKcore/HexGL.git
+	cd HexGL
+	python -m SimpleHTTPServer
+	chromium index.html
+
+To use full size textures, swap the two textures/ and textures.full/ directories.
+
